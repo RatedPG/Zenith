@@ -25,6 +25,7 @@ export class HomePageComponent implements OnInit {
   ) { 
     this.displayEvents = [];
     this.getDisplayEvents = this.getDisplayEvents.bind(this);
+    this.getActivty = this.getActivty.bind(this);
   }
 
   getMondaySunday(){
@@ -46,7 +47,9 @@ export class HomePageComponent implements OnInit {
       var compFromDate = new Date(element.eventFromDate);
       var compToDate = new Date(element.eventToDate)
       if(compFromDate > this.lastMonday && compToDate < this.nextSunday){
-        this.displayEvents = [...this.displayEvents, element];
+        this.activityFetchService.getActivity(element.activityCategoryId)
+          .then(ac => element.activityCategory = ac)
+          .then(ac => this.displayEvents = [...this.displayEvents, element]);
       }
     }.bind(this));
   
@@ -66,6 +69,13 @@ export class HomePageComponent implements OnInit {
     */
   }
 
+  getActivty(id: string) : ActivityCategory {
+    var activity
+    this.activityFetchService.getActivity(id)
+    .then(ac => activity = ac);
+    return activity
+  }
+ 
   nextWeek(){
     this.referDate = new Date(this.referDate.setDate(this.referDate.getDate() + 7));
     this.getMondaySunday();
