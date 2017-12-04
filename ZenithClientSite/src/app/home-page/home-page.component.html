@@ -23,6 +23,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let e of displayEvents; let i = index">
+                <td>{{e.activityCategory.activityDescription}}</td>
                 <td>{{e.eventFromDate | date:'MMM d, y, h:mm:ss a'}} to {{e.eventToDate | date:'MMM d, y, h:mm:ss a'}}</td>
                 <td>{{e.createdBy}}</td>
 
