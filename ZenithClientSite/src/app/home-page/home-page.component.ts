@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Event } from '../event';
 import { EventFetchService } from '../event-fetch.service';
+import { ActivityCategory } from '../activity-category';
+import { ActivityFetchServiceService } from '../activity-fetch-service.service';
 import { Data } from '@angular/router/src/config';
 import { forEach } from '@angular/router/src/utils/collection';
 
@@ -18,8 +20,12 @@ export class HomePageComponent implements OnInit {
   referDate  : Date;
 
   constructor(
-    private eventFetchService : EventFetchService
-  ) { }
+    private eventFetchService : EventFetchService,
+    private activityFetchService : ActivityFetchServiceService
+  ) { 
+    this.displayEvents = [];
+    this.getDisplayEvents = this.getDisplayEvents.bind(this);
+  }
 
   getMondaySunday(){
     var temp = new Date(this.referDate);
@@ -35,21 +41,46 @@ export class HomePageComponent implements OnInit {
   }
 
   getDisplayEvents(){
-
+    this.displayEvents = [];
+    this.events.forEach(function(element){
+      var compFromDate = new Date(element.eventFromDate);
+      var compToDate = new Date(element.eventToDate)
+      if(compFromDate > this.lastMonday && compToDate < this.nextSunday){
+        this.displayEvents = [...this.displayEvents, element];
+      }
+    }.bind(this));
+  
+    /*
+    console.log("in display");
+    //this.displayEvents = this.events;
+    this.events.forEach(function(element){
+      var activity
+      var completeEvent = element
+      this.activityFetchService.getActivity(element.activityCategoryId)
+      //.then(ac => console.log("activity"))
+      .then(ac => activity = ac)
+      .then(ac => completeEvent.activityCategory = activity);
+      this.displayEvents = [...this.displayEvents, completeEvent]
+      console.log(completeEvent.activityCategory);
+    }.bind(this));
+    */
   }
 
   nextWeek(){
     this.referDate = new Date(this.referDate.setDate(this.referDate.getDate() + 7));
     this.getMondaySunday();
+    this.getDisplayEvents();
   }
 
   prevWeek(){
     this.referDate = new Date(this.referDate.setDate(this.referDate.getDate() - 7));
     this.getMondaySunday();
+    this.getDisplayEvents();
   }
-  getEvents(): void {
+ getEvents(): void {
     this.eventFetchService.getEvents()
-      .then(events => this.events = events);
+      .then(events => this.events = events)
+      .then(events => this.getDisplayEvents());
   }
   ngOnInit() {
     this.getEvents();

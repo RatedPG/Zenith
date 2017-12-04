@@ -7,7 +7,7 @@ import { Event } from './event';
 @Injectable()
 export class EventFetchService {
 
-  private BASE_URL = "http://zenithsocietycore2.azurewebsites.net/api/events";
+  private BASE_URL = "http://zenithsocore.azurewebsites.net/api/eventsapi";
 
   constructor(private http: Http) {}
 
