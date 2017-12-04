@@ -7,7 +7,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { HomePageComponent } from './home-page/home-page.component';
-import {EventFetchService} from './event-fetch.service'; 
+import {EventFetchService} from './event-fetch.service';
+import { ActivityFetchServiceService } from './activity-fetch-service.service'; 
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import {EventFetchService} from './event-fetch.service';
     AppRoutingModule,
     HttpModule
   ],
-  providers: [EventFetchService],
+  providers: [EventFetchService, ActivityFetchServiceService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

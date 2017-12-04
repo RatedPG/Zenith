@@ -1,3 +1,5 @@
+import { ActivityCategory } from "./activity-category";
+
 /*
 export class Event {
     eventId            : number;
@@ -20,5 +22,5 @@ export class Event {
     isActive           : boolean;
     creationDate       : string;
     activityCategoryId : number;
-    activityCategory   : null;
+    activityCategory   : ActivityCategory;
 }

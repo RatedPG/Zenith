@@ -18,12 +18,14 @@
     <br>
     <br>
     <br>
-    <table *ngIf="events" class="table table-bordered">
+    <table *ngIf="displayEvents" class="table table-bordered">
         <thead>
         </thead>
         <tbody>
-            <tr>
-                <td>IAMINTABLE</td>
+            <tr *ngFor="let e of displayEvents; let i = index">
+                <td>{{e.eventFromDate | date:'MMM d, y, h:mm:ss a'}} to {{e.eventToDate | date:'MMM d, y, h:mm:ss a'}}</td>
+                <td>{{e.createdBy}}</td>
+
             </tr>          
         </tbody>
     </table>
