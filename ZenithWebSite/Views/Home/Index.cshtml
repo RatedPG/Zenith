@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var events = ViewBag.events;
+}
+
+<h1>Zenith Society!</h1>
+<table class="table-bordered">
+    <tbody>
+        @foreach (var e in events)
+        {
+            <tr>
+                <th colspan="2" style="background: #0094ff; text-align:center">@e.Key.ToString("dddd MMMM dd, yyyy")</th>
+            </tr>
+            foreach (var v in @e.Value)
+            {
+                <tr>
+                    <td>@v.EventFromDate.ToString("HH:mm tt") - @v.EventToDate.ToString("HH:mm tt")</td>
+                    <td>@v.ActivityCategory.ActivityDescription</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

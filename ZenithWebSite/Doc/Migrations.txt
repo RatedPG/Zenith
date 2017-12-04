@@ -1,0 +1,9 @@
+dotnet ef migrations add "First Migraton"
+
+dotnet ef database update
+
+dotnet restore
+
+dotnet build
+
+dotnet run
