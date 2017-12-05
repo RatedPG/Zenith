@@ -10,7 +10,7 @@ export class ActivityFetchServiceService {
   private BASE_URL = "http://zenithsocore.azurewebsites.net/api/activitycategoriesapi/";
   constructor(private http: Http) { }
 
-  getActivity(id : string): Promise<ActivityCategory> {
+  getActivity(id : number): Promise<ActivityCategory> {
     return this.http.get(this.BASE_URL + id)
         .toPromise()
         .then(response => response.json() as ActivityCategory)

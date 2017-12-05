@@ -5,6 +5,7 @@ import { ActivityCategory } from '../activity-category';
 import { ActivityFetchServiceService } from '../activity-fetch-service.service';
 import { Data } from '@angular/router/src/config';
 import { forEach } from '@angular/router/src/utils/collection';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-home-page',
@@ -18,13 +19,15 @@ export class HomePageComponent implements OnInit {
   lastMonday : Date;
   nextSunday : Date;
   referDate  : Date;
-
+  isLoading  : boolean;
   constructor(
     private eventFetchService : EventFetchService,
-    private activityFetchService : ActivityFetchServiceService
+    private activityFetchService : ActivityFetchServiceService,
   ) { 
     this.displayEvents = [];
+    this.isLoading = true;
     this.getDisplayEvents = this.getDisplayEvents.bind(this);
+    this.parseEvents = this.parseEvents.bind(this);
     this.getActivty = this.getActivty.bind(this);
   }
 
@@ -41,8 +44,25 @@ export class HomePageComponent implements OnInit {
     }
   }
 
-  getDisplayEvents(){
+  parseEvents(){
+    for(let element of this.events){
+      var compFromDate = new Date(element.eventFromDate);
+      var compToDate = new Date(element.eventToDate)
+      if(compFromDate > this.lastMonday && compToDate < this.nextSunday){
+        this.activityFetchService.getActivity(element.activityCategoryId)
+          .then(ac => element.activityCategory = ac)
+          .then(ac => this.displayEvents = [...this.displayEvents, element]);
+      }
+    }
+  }
+
+  async getDisplayEvents(){
+    this.isLoading = true;
     this.displayEvents = [];
+    await this.parseEvents();
+    this.isLoading = false;
+
+    /*
     this.events.forEach(function(element){
       var compFromDate = new Date(element.eventFromDate);
       var compToDate = new Date(element.eventToDate)
@@ -52,24 +72,10 @@ export class HomePageComponent implements OnInit {
           .then(ac => this.displayEvents = [...this.displayEvents, element]);
       }
     }.bind(this));
-  
-    /*
-    console.log("in display");
-    //this.displayEvents = this.events;
-    this.events.forEach(function(element){
-      var activity
-      var completeEvent = element
-      this.activityFetchService.getActivity(element.activityCategoryId)
-      //.then(ac => console.log("activity"))
-      .then(ac => activity = ac)
-      .then(ac => completeEvent.activityCategory = activity);
-      this.displayEvents = [...this.displayEvents, completeEvent]
-      console.log(completeEvent.activityCategory);
-    }.bind(this));
     */
   }
 
-  getActivty(id: string) : ActivityCategory {
+  getActivty(id: number) : ActivityCategory {
     var activity
     this.activityFetchService.getActivity(id)
     .then(ac => activity = ac);
@@ -80,6 +86,7 @@ export class HomePageComponent implements OnInit {
     this.referDate = new Date(this.referDate.setDate(this.referDate.getDate() + 7));
     this.getMondaySunday();
     this.getDisplayEvents();
+    this.isLoading = false;
   }
 
   prevWeek(){
